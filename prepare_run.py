@@ -40,6 +40,7 @@ params = get_params_from_command_line({
   'dest': 'test_new', #name of the destination folder, where the new calculation will be
   'auto_dest': False, #if True, overrides dest, and dest is set as source+key.val.key.val.key.val... for the keys set.
   'from_scratch': False, #if True, deletes all *.dat files in dest
+  'recompute_DOS': False,
   'keys': [],
   'vals': [],
 })
@@ -60,7 +61,9 @@ os.system("../scripts/bin/CLEANUPDMFT_FOR_RESTART")
 if from_scratch: 
     os.system("GLOBIGNORE=DOS.dat; rm *.dat *.err *.out")
     print("will be doing things from scratch")
-#os.system(f"cp {source}/DOS.dat {dest}/")
+
+if recompute_DOS:
+    os.system("../prepare_Hubbard_dos.py")
 
 print("cleaned up dest")
 
@@ -75,7 +78,7 @@ if 'mu' in keys:
     os.system("touch param.mu")
     os.system('echo %g >> param.mu'%(vals[keys.index('mu')]))
     print("prepared param.mu in dest")
-if 'epsd' in keys:
+if ('epsd' in keys) and not recompute_DOS:
     os.system("rm param.eps")
     os.system("touch param.eps")
     os.system('echo %g >> param.eps'%(vals[keys.index('epsd')]))

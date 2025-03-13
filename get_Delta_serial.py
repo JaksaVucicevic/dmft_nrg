@@ -64,7 +64,7 @@ params = {
   'fnparam': 'tb_params.py', #file where the tight-binding parameters are stored, should be relevant for the model used
   'check': False, #in the commandline args use 0/1 for False/True
   'test': False, #if True, printout a Sigma to test the code,
-  'deal_with_Delta_shift': False,
+#  'deal_with_Delta_shift': False,
   'use_Hubbard_DOS': True,
   'fndos': 'DOS.dat'  
 }
@@ -221,11 +221,11 @@ def get_Glattloc_Hubbard_using_DOS():
     return Glattlocw
 
 get_Glattloc = {
-  'Emery': lambda: get_Glattloc_Emery(nw, ws, Sigmaw, mu, epsd, epsp, tpd, tpp, tppp),
-  'Hubbard': [
+    'Emery': lambda: get_Glattloc_Emery(nw, ws, Sigmaw, mu, epsd, epsp, tpd, tpp, tppp),
+    'Hubbard': [
         lambda: get_Glattloc_Hubbard(nw, ws, Sigmaw, mu, epsd, epsp, tpd, tpp, tppp), 
-        get_Glattloc_Hubbard_using_DOS][params['use_Hubbard_DOS']
-  ]
+        get_Glattloc_Hubbard_using_DOS
+    ][params['use_Hubbard_DOS']]
 }[params['model']]
 
 print("about to get Glattloc")
@@ -257,13 +257,13 @@ print("about to get Delta",end="...")
 Deltaw = ws + mu - epsd - Sigmaw - 1.0/Glattlocw
 print("done")
 
-if params['deal_with_Delta_shift']:
-    #extract shift and modify param.eps for the next iteration
-    shift = 0.5*(Deltaw.real[0]+Deltaw.real[-1])
-    print("DELTA_SHIFT_BUSINESS: got new shift from Delta:", shift)
-
-    with open("param.eps", "w") as f:
-        f.write("%g"%(epsd+shift))
+#if params['deal_with_Delta_shift']:
+#    #extract shift and modify param.eps for the next iteration
+#    shift = 0.5*(Deltaw.real[0]+Deltaw.real[-1])
+#    print("DELTA_SHIFT_BUSINESS: got new shift from Delta:", shift)
+#
+#    with open("param.eps", "w") as f:
+#        f.write("%g"%(epsd+shift))
 
 print("about to printout Delta",end="...")
 write_output(params['fnrd'], params['fnid'], ws, Deltaw)

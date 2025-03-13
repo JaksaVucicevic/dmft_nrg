@@ -80,5 +80,10 @@ dos = numpy.array([0]+list(hist)+[0])
 weight = numpy.trapz(dos, omegas)
 print("got dos, weight=",weight,"but don't worry if not 1, we'll normalize it")
 
+epsd = numpy.trapz(dos*omegas/weight, omegas)
+
 numpy.savetxt(fndos,numpy.concatenate((omegas[:,None], dos[:,None]/weight), axis=1))
+
+with open("param.eps","w") as f:
+    f.write("%g"%epsd)
     
