@@ -1,0 +1,5 @@
+../scripts/bin/CLEANUPDMFT
+../scripts/bin/CLEANUPDMFT_FOR_RESTART
+GLOBIGNORE=DOS.dat
+rm *.err *.out *.dat
+rm -r ?

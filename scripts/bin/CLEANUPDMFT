@@ -1,0 +1,83 @@
+#!/usr/bin/env perl
+# V1
+# v2 - add -f switch to rm
+# DMFT result directory cleanup script
+# Rok Zitko, rok.zitko@ijs.si, March 2008, Oct 2012
+
+use warnings;
+# use Getopt::Std;
+
+my $KEEP = 1; # keep last iteration
+
+if (!-e 'ITER') {
+    die "No ITER found, stopped";
+}
+
+if (-d "A" && -d "B") {
+    # Recursive call
+    chdir "A" or die;
+    system "CLEANUPDMFT";
+    chdir "..";
+    chdir "B" or die;
+    system "CLEANUPDMFT";
+    chdir "..";
+}
+
+my $iter = `cat ITER`;
+
+print("iter=[$iter]\n");
+
+if (-d "dmft") {
+    chdir "dmft/";
+    for ($i = 1; $i <= $iter - $KEEP ; $i++) {
+	system "rm -f $i-*";
+    }
+    chdir "..";
+}
+
+if (-d "res") {
+    chdir "res";
+    ###system "rm *"; # REMOVED in 2016, WE WANT TO KEEP THIS!!
+    chdir "..";
+}
+
+# NO, NOT FOR TEMPLATES!
+#system "rm -f basis.*";
+#system "rm -f ham.*";
+#system "rm -f op.*";
+
+system "rm -rf [1-9] [1-9][0-9]";
+
+system "rm -f Delta-re.dat Delta.dat Delta.m DeltaFirst.*";
+system "rm -f FSOL FSOLNEG";
+system "rm -f Delta.dat.OLD";
+system "rm -f log.lsf-e log.lsf-o my.job";
+# system "rm FSOL*";
+system "rm -f Delta-d.* Delta-u.*";
+system "rm -f Delta.dat2 DeltaFirst-?.dat Delta-re-?.dat";
+system "rm -f Delta.dat.unsym Delta.diff";
+system "rm -f Delta.dat-0";
+system "rm -f Delta-[1-9]*.dat";
+system "rm -f Delta-d-*.dat Delta-u-*.dat";
+system "rm -f sbatch*.log";
+system "rm -f slurm-*.out job";
+system "rm -f tmp.tmp";
+system "rm -f unique-*.dat";
+system "rm -f nohup.out";
+#system "rm ERROR";
+#system "rm -f ham_*";
+system "rm -rf mmalog";
+
+# new stuff #####
+system "rm -f logNEW*";
+system "rm -f log.bandDOS";
+system "rm -f logUNION";
+system "rm -f Delta*-common";
+#################
+system "rm -rf Delta.dat.NEW Delta.dat.OLD Delta.dat.TEMP ImDelta.dat ReDelta.dat";
+
+for ($i = 1; $i <= 64 ; $i++) {
+    -d "$i" or next;
+    -e "$i/data" or next;
+    system "rm -rf $i";
+}

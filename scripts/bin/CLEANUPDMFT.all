@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+# DMFT result directory cleanup script
+# Rok Zitko, rok.zitko@ijs.si, March 2008, Oct 2012
+
+use warnings;
+
+system "rm -rf dmft/ res/";
+
+# NO!!!
+#system "rm -f basis.*";
+#system "rm -f ham.*";
+#system "rm -f op.*";
+
+system "rm -rf [1-9] [1-9][0-9]";
+
+system "rm -f Delta-re.dat Delta.dat Delta.m DeltaFirst.*";
+system "rm -f FSOL FSOLNEG";
+system "rm -f Delta.dat.OLD";
+system "rm -f Delta-d.* Delta-u.*";
+system "rm -f Delta.dat2 DeltaFirst-?.dat Delta-re-?.dat";
+system "rm -f Delta.dat.unsym Delta.diff";
+system "rm -f Delta-[1-9]*.dat";
+system "rm -f Delta-d-*.dat Delta-u-*.dat";
+system "rm -f sbatch*.log";
+system "rm -f slurm-*.out job";
+system "rm -f nohup.out";
+system "rm -f mmalog";

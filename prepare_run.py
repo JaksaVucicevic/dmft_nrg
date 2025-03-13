@@ -58,8 +58,9 @@ os.system(f"cp -Tr {source} {dest}")
 os.chdir(dest)
 os.system("../scripts/bin/CLEANUPDMFT_FOR_RESTART")
 if from_scratch: 
-    os.system("rm *.dat *.err *.out")
+    os.system("GLOBIGNORE=DOS.dat; rm *.dat *.err *.out")
     print("will be doing things from scratch")
+#os.system(f"cp {source}/DOS.dat {dest}/")
 
 print("cleaned up dest")
 

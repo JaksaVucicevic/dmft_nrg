@@ -6,7 +6,7 @@ epsp = 0
 tpd = 1.29
 tpp = 0.674
 tppp = 0.184
-mu = 4
+mu = 8
 
 
 print(

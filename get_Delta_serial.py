@@ -13,12 +13,15 @@ import numpy
 import scipy
 import itertools
 import sys
+import os
 import time
 from numpy import cos, sin
 from numba import njit
 import cubepy as cp
 
 print("Welcome to get_Delta_serial.py!!!!")
+
+   
 
 #@njit
 #def optimized_inv(M):
@@ -61,7 +64,9 @@ params = {
   'fnparam': 'tb_params.py', #file where the tight-binding parameters are stored, should be relevant for the model used
   'check': False, #in the commandline args use 0/1 for False/True
   'test': False, #if True, printout a Sigma to test the code,
-  'deal_with_Delta_shift': False
+  'deal_with_Delta_shift': False,
+  'use_Hubbard_DOS': True,
+  'fndos': 'DOS.dat'  
 }
 
 # read the commandline arguments to set parameters
@@ -208,9 +213,19 @@ def get_Glattloc_Hubbard(nw, ws, Sigmaw, mu, epsd, epsp, tpd, tpp, tppp):
 
     return Glattloc
 
+def get_Glattloc_Hubbard_using_DOS():    
+    cmd = f"hilb -v -G -x {mu} -d {params['fndos']} {params['fnrs']} {params['fnis']} {params['fnrg']} {params['fnig']}"
+    print(cmd)    
+    os.system(cmd)
+    _, Glattlocw = load_input(params['fnrg'], params['fnig'])
+    return Glattlocw
+
 get_Glattloc = {
   'Emery': lambda: get_Glattloc_Emery(nw, ws, Sigmaw, mu, epsd, epsp, tpd, tpp, tppp),
-  'Hubbard': lambda: get_Glattloc_Hubbard(nw, ws, Sigmaw, mu, epsd, epsp, tpd, tpp, tppp)
+  'Hubbard': [
+        lambda: get_Glattloc_Hubbard(nw, ws, Sigmaw, mu, epsd, epsp, tpd, tpp, tppp), 
+        get_Glattloc_Hubbard_using_DOS][params['use_Hubbard_DOS']
+  ]
 }[params['model']]
 
 print("about to get Glattloc")

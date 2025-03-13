@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+
+system "cpdelta";
+system "mv DeltaLast.dat DeltaFirst.dat";
+system "mkdir -p preserve";
+system "cp DeltaFirst* preserve/";
+system "CLEANUPDMFT.all";
+system "cp preserve/DeltaFirst* .";
+system "rm -rf preserve/";
+
+system "rm -f BROYDEN* DIFFS* DeltaLast* FSOL* ITER PARAM CONVERGED STOP RESTART";
+system "rm -f custom*";
+system "rm -f imaw*.dat imsigma*.dat reaw*.dat resigma*.dat self*.dat";
+system "rm -f rho*.dat cond*.dat";
+system "rm -rf dmft/ res/";
+system "rm -rf LL.dat Z.dat ZT.dat ekin.dat epot.dat kappa.dat thermopowerS.dat";
+system "rm -rf OK NOTOK";
+system "rm -rf ERROR SPACE";
+system "rm -rf Delta.dat.NEW Delta.dat.OLD Delta.dat.TEMP ImDelta.dat ReDelta.dat";
+system "rm -rf Delta.dat.NEW-common Delta.dat.NEW-opt Delta.dat.OLD-common";
+system "rm -rf mesh.dat logNEW logUNION logNEW.* logUNION.* log.bandDOS";
