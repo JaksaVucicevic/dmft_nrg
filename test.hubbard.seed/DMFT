@@ -1,0 +1,41 @@
+#!/usr/bin/env perl
+# Rok Zitko, rok.zitko@ijs.si, Dec 2022
+
+if (!-e "Delta.dat") { system "./dmft_init"; }
+
+my $Nz = `getparam Nz param.loop`;
+chomp($Nz);
+
+# Chemical potential
+my $mu = `cat param.mu`;
+chomp($mu);
+
+# epsilon_d
+my $eps = `cat param.eps`;
+chomp($eps);
+
+my $epsimp = $eps-$mu;
+
+system "m4 -DEPS=$epsimp -DZZZ=1 param.loop >param";
+
+system("adapt P | tee solverlog");
+system("adapt N | tee solverlogneg");
+
+if (!(-e "FSOL.dat" && -e "FSOLNEG.dat")) {
+  print "solver failed.\n";
+  exit(1);
+}
+
+for ($i = 1; $i <= $Nz; $i++) {
+  my $z = $i/$Nz;
+  system "m4 -DEPS=$epsimp -DZZZ=$z param.loop >param";
+  system "mkdir -p $i";
+  system "./instantiate $i";
+  chdir $i;
+  system "mynrgrun";
+  chdir "..";
+  unlink "param";
+  unlink "data";
+}
+
+system "./dmft_done" if (-x "dmft_done");

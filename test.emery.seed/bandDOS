@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+# RZ, 2024
+
+use strict;
+use warnings;
+
+# Chemical potential
+my $mu = `cat param.mu`;
+chomp($mu);
+
+# epsilon_d
+my $eps = `cat param.eps`;
+chomp($eps);
+
+my $shift = $mu - $eps;
+# Note: in this version, mu and eps are defined in tb_params.py, thus $shift is not used here.
+
+#system "ml purge ; ml openmpi ; mpirun -n 4 $ENV{PYENV_ROOT}/versions/python-3.9.21/bin/python -u get_Delta.py -check -model=Emery -fnparam=tb_params.py | tee log.bandDOS";
+#system "ml purge ; ml openmpi ; mpirun -n 4 python -u ../get_Delta.py -check -model=Emery -fnparam=tb_params.py | tee log.bandDOS";
+#system "mpirun -- python ../get_Delta.py -check -model=Emery -fnparam=tb_params.py | tee log.bandDOS";
+system "python ../get_Delta_serial.py -check -model=Emery -fnparam=tb_params.py | tee log.bandDOS";
+
+-e "res/ImGlattloc.dat" or exit;
+-e "res/ReGlattloc.dat" or exit;
+
+system "scaley -0.3183098861837906 res/ImGlattloc.dat >res/imaw.dat";
+system "scaley -0.3183098861837906 res/ReGlattloc.dat >res/reaw.dat";
