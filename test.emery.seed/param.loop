@@ -20,7 +20,7 @@ alpha=0.5
 
 # Accuracy goal for the spectral function (integrated
 # difference between two iterations)
-conveps=1e-8
+conveps=1e-5
 
 # Mesh optimization parameters
 opt_delta=0.03

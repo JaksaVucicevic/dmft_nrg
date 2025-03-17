@@ -2,10 +2,10 @@
 ##SBATCH --job-name=dmft
 #SBATCH --error=do_dmft.err
 #SBATCH --output=do_dmft.out
-##SBATCH --nodelist=pv04
+#SBATCH --nodelist=pv[19-22]
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=1
 ##SBATCH --mem-per-cpu=2G
 
 module purge
@@ -19,6 +19,6 @@ echo $PATH
 export EASYBUILD_MODULES_TOOL=EnvironmentModules
 export EASYBUILD_MODULE_SYNTAX=Tcl
 
-export MKL_NUM_THREADS=8 
+export MKL_NUM_THREADS=1 
 
 ./DMFT
