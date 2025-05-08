@@ -58,8 +58,11 @@ print("dest=",dest)
 os.system(f"cp -Tr {source} {dest}")
 os.chdir(dest)
 os.system("../scripts/bin/CLEANUPDMFT_FOR_RESTART")
+os.system("rm *.err *.out")
+os.system("mkdir res")
+os.system("mkdir dmft")
 if from_scratch: 
-    os.system("GLOBIGNORE=DOS.dat; rm *.dat *.err *.out")
+    os.system("GLOBIGNORE='DOS.dat:Phi.dat'; rm *.dat")
     print("will be doing things from scratch")
 
 if recompute_DOS:
@@ -89,3 +92,7 @@ if 'T' in keys:
 if 'U' in keys:
     os.system(r'sed -i "/U1=/c\U1=%g" param.loop'%(vals[keys.index('U')]))
     print("set U in param.loop in dest")
+if 'broaden_alpha' in keys:
+    os.system(r'sed -i "/broaden_alpha=/c\broaden_alpha=%g" param.loop'%(vals[keys.index('broaden_alpha')]))
+    print("set broaden_alpha in param.loop in dest")
+

@@ -60,7 +60,7 @@ params = {
   'fnrg': 'res/ReGlattloc.dat', #name of the output file for the real part of Delta
   'fnid': 'ImDelta.dat', #name of the output file for the imaginary part of Delta
   'fnrd': 'ReDelta.dat', #name of the output file for the real part of Delta
-  'model': 'Emery', #'Hubbard' 
+  'model': 'auto',#'Emery', #'Hubbard' 
   'fnparam': 'tb_params.py', #file where the tight-binding parameters are stored, should be relevant for the model used
   'check': False, #in the commandline args use 0/1 for False/True
   'test': False, #if True, printout a Sigma to test the code,
@@ -102,6 +102,10 @@ print("about to load Sigma from ",params['fnrs'], params['fnis'],end="...")
 ws, Sigmaw = load_input(params['fnrs'], params['fnis'])
 nw = len(ws)
 print("done")
+
+if params['model']=='auto':
+    params['model']=['Emery','Hubbard'][int(os.path.exists(params['fndos']) or os.path.exists('Phi.dat'))]
+    print("automatic model determination based on the existence of DOS and Phi files: model=",params['model'])
 
 def get_Glattloc_Emery(nw, ws, Sigmaw, mu, epsd, epsp, tpd, tpp, tppp):
     # get the Glatt loc

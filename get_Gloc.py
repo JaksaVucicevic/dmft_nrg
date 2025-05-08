@@ -12,6 +12,7 @@ import numpy
 import scipy
 import itertools
 import sys
+import os
 import time
 from numpy import cos, sin
 import cubepy as cp
@@ -68,13 +69,20 @@ def get_params_from_command_line(params): #params is dict
 params = get_params_from_command_line({
   'fnis': 'res/imsigma.dat', #name of the input file for the imaginary part of Sigma
   'fnrs': 'res/resigma.dat', #name of the input file for the real part of Sigma
-  'model': 'Emery', #'Hubbard' 
+  'model': 'auto',#'Emery', #'Hubbard' 
   'wstep': 0.,
   'fnparam': 'tb_params.py', #file where the tight-binding parameters are stored, should be relevant for the model used
   'test': False, #if True, printout a Sigma to test the code
   'skip': [],
   'components': [(0,0),(1,1)]#[(0,0),(0,1),(0,2),(1,1),(1,2),(2,2)]
 })
+
+if params['model']=='auto':
+    params['model']=['Emery','Hubbard'][int(os.path.exists('DOS.dat') or os.path.exists('Phi.dat'))]
+    print("automatic model determination based on the existence of Phi file: model=",params['model'])
+if params['model']=='Hubbard':
+    print("get_Gloc is only for Emery model, exiting")
+    quit() #does not work with mpi
 
 if mpirank==0: print("params:",params)
 
